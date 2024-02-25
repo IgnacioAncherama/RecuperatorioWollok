@@ -1,0 +1,48 @@
+import Recu.*
+
+describe "comidas"{
+	const hamburguesaCarne = new BurgerCarne(tipoPan = panCasero)
+	const hamburguesaVe = new BurgerVegetarianas(tipoPan = panMasaMadre, hechoDe = "garbanzos" )
+	const provoleta = new Provoleta( especias = true , peso = 190)
+	const asado = new Cortes(calidad = 10 , peso = 250 , nombre = "asado")
+	const entrania = new Cortes(calidad = 7 , peso = 200 , nombre = "entrania")
+	const chorizo = new Cortes(calidad = 8 , peso = 50 , nombre = "chorizo")
+	const parrillada = new Parrillada( cortes = #{ asado, entrania, chorizo})
+	test "Valoración de la Hambruguesa de Carne con pan casero. El resultado será: 80 (60 + 20)"{
+		assert.equals(hamburguesaCarne.valoracion(), 80)
+	}
+	test "Valoración de la Hambruguesa Vegetariana, con pan de masaMadre y de garbanzos como legumbre. El resultado será: 122 (60 + 45 + 17)"{
+		assert.equals(hamburguesaVe.valoracion(), 122)
+	}
+	test "Provoleta, de peso 190 y con especias. El resultado de ser especial es: true"{
+		assert.that(provoleta.esEspecial())
+	}
+	test "Parillada, que incluya un asado, de calidad 10 y peso 250 gramos, una entraña, de calidad 7 y peso 200 gramos y un chorizo, de calidad 8 y peso 50 gramos. El resultado de la valoracion será de 147 (15 * 10) - 3."{
+		assert.equals(parrillada.valoracion(), 147)
+	}
+}
+
+describe "comenzales" {
+	const provoleta = new Provoleta( especias = true , peso = 190)
+	const asado = new Cortes(calidad = 10 , peso = 250 , nombre = "asado")
+	const entrania = new Cortes(calidad = 7 , peso = 200 , nombre = "entrania")
+	const chorizo = new Cortes(calidad = 8 , peso = 50 , nombre = "chorizo")
+	const hamburguesaV = new BurgerVegetarianas(tipoPan = panMasaMadre, hechoDe = "garbanzos" )
+	const vegetariano = new Vegetarianos( peso = 68500 , comidas = [provoleta , hamburguesaV, hamburguesaV])
+	const comensalP = new HambrePopular( peso = 85000 , comidas = [asado, entrania, chorizo])
+	const comensalF = new PaladarFino(peso = 0)
+	const hamburguesaCarne = new BurgerCarne(tipoPan = panMasaMadre, peso = 250)
+	const hamburguesaCarne2 = new BurgerCarne(tipoPan = panCasero, peso = 250)
+	test "Un vegetariano de peso 68500 gramos come una provoleta de 190 gramos con especias y dos Hamburguesas Vegetarianas (250 grs cada una) con pan de masaMadre y de garbanzos como legumbre. El resultado si esta satisfecho es: True porque (190 + 250 + 250) >= (68500 * 0.01) y además ninguna de las tres comidas es abundante, es decir, ninguna supera los 250 gramos."{
+		assert.that(vegetariano.estaSatisfecho())
+	}
+	test "Un comensal popular de peso 85000 gramos come una parrillada que incluye un asado, de calidad 10 y peso 250 gramos, una entraña, de calidad 7 y peso 200 gramos y un chorizo, de calidad 8 y peso 50 gramos. El resultado si esta satisfecho es: False porque 500 < 850"{
+		assert.notThat(comensalP.estaSatisfecho())
+	}
+	test "Un comensal de paladar fino le agrada comer una Hamburguesa de carne de 250 gramos con pan de masa madre."{
+		assert.that(comensalF.leAgrada(hamburguesaCarne))
+	}
+	test "Un comensal de paladar fino NO agrada comer una Hamburguesa de carne de 250 gramos con pan casero."{
+		assert.notThat(comensalF.leAgrada(hamburguesaCarne2))
+	}
+}
